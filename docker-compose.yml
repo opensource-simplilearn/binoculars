@@ -1,0 +1,98 @@
+version: '3.1'
+services:
+  prometheus:
+    image: prom/prometheus:v2.33.3
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - '--web.enable-lifecycle'
+      - '--storage.tsdb.path=/prometheus'
+    volumes:
+      - ./prometheus/config/prometheus/prometheus.${ENVIRONMENT}.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/config/blackbox-targets/blackbox-targets.${ENVIRONMENT}.yml:/etc/prometheus/blackbox-targets.yml
+      - ./prometheus/config/node-exporter-targets/node-exporter-targets.${ENVIRONMENT}.yml:/etc/prometheus/node-exporter-targets.yml      
+      - prometheus-storage:/prometheus
+    links:
+      - cadvisor:cadvisor
+      - alertmanager:alertmanager
+      - blackbox_exporter:blackbox_exporter
+    depends_on:
+      - cadvisor
+    restart: always
+    
+  alertmanager:
+    image: prom/alertmanager:v0.23.0
+    container_name: alertmanager
+    ports:
+      - 9093:9093
+    volumes:
+      - ./alertmanager/config/config.${ENVIRONMENT}.yml:/etc/alertmanager/config.yml
+      - alertmanager-storage:/alertmanager
+    restart: always
+    command:
+      - --config.file=/etc/alertmanager/config.yml
+      - --storage.path=/alertmanager
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.38.6
+    container_name: cadvisor
+    ports:
+      - 8080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+  pushgateway:
+    image: prom/pushgateway:v1.4.2
+    container_name: pushgateway
+    ports:
+      - 9091:9091
+  node-exporter:
+    image: prom/node-exporter:v1.3.1
+    container_name: node-exporter
+    ports:
+      - 9100:9100
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command: 
+      - '--path.procfs=/host/proc' 
+      - '--path.sysfs=/host/sys'
+      - --collector.filesystem.ignored-mount-points
+      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+    restart: always
+  blackbox_exporter:
+    image: prom/blackbox-exporter:v0.19.0
+    container_name: blackbox-exporter
+    ports:
+      - 9115:9115
+    volumes:
+      - ./blackboxexporter/config/config.${ENVIRONMENT}.yml:/etc/blackboxexporter/config.yml      
+    command:
+      - '--config.file=/etc/blackboxexporter/config.yml'      
+    restart: always
+  grafana:
+    image: grafana/grafana:8.4.1
+    container_name: grafana
+    ports:
+      - 3000:3000    
+    depends_on:
+      - prometheus
+      - cadvisor
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SERVER_DOMAIN=${GRAFANA_SERVER_DOMAIN}
+      - GF_SERVER_ROOT_URL=${GRAFANA_SERVER_ROOT_URL}
+      - GF_SERVER_SERVE_FROM_SUB_PATH=${GRAFANA_SERVER_SERVE_FROM_SUB_PATH}
+    restart: always
+volumes: 
+  grafana-storage: {}
+  alertmanager-storage: {}
+  prometheus-storage: {}

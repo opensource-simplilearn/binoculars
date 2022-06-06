@@ -1,14 +1,14 @@
-# Horus Eye Monitor
+# Binoculars
 
-Welcome to the Horus Eye Monitor project! This is a one-stop solution to your cloud monitoring needs.
-Horus Eye helps you set up Prometheus to pull metrics and visualize them using Grafana
+Welcome to the Binoculars project! This is a one-stop solution to your cloud monitoring needs.
+Binoculars helps you set up Prometheus to pull metrics and visualize them using Grafana
 
 
 ## Overview
 ![Architecture Diagram](https://user-images.githubusercontent.com/77042177/160987877-927939de-6704-49f3-a6ef-010ed0613356.png)
 ## Getting Started
 
-To configure the Horus Eye monitor project
+To configure the Binoculars project
 
 Pre-requisites
 - Docker Engine (version >=20.10.13)

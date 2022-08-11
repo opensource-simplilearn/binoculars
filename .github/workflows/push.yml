@@ -8,7 +8,7 @@ jobs:
       - name: Build the stack
         run:  docker-compose --env-file ./config/.env.dev up -d
       - name: Grafana Test
-        run:  curl  -X GET  https://0.0.0.0:3000/
+        run:  curl 'http://0.0.0.0:3000/login'
       # - name: Prometheus Test
       #   run: curl -X GET  http://localhost:9090/
       # - name: PushGateway Test

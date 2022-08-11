@@ -1,9 +1,9 @@
 name: binoculars-actions-workflow
 on: push
 jobs:
-  test:
+  Docker-Build-Test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build the stack
+      - name: Build the Docker stack
         run:  docker-compose --env-file ./config/.env.dev up -d

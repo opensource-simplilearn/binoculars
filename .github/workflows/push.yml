@@ -5,6 +5,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Check out repository
       - name: Build the stack
         run:  docker-compose --env-file ./config/.env.dev up -d
+      - name: Trigger on event
+        run: echo "🕵🏻‍♀️ The job was automatically triggered by a ${{ github.event_name }} event."
+      - name: Trigger machine
+        run: echo "💻 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - name: Branch Details
+        run: echo "🔎 The name of branch is ${{ github.ref }} and  repository is ${{ github.repository }}."

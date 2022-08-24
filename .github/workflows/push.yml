@@ -1,9 +1,19 @@
-name: binoculars-actions-workflow
-on: push
+name: binoculars-actions-test-workflow
+on: [push, pull_request]
 jobs:
   Docker-Build-Test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.6, 3.7]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
     steps:
-      - uses: actions/checkout@v2
-      - name: Build the Docker stack
-        run:  docker-compose --env-file ./config/.env.dev up -d
+      - run: echo "🕵🏻‍♀️ The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "💻 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of branch is ${{ github.ref }} and  repository is ${{ github.repository }}."
+      - name: Check out repository
+      - uses: actions/checkout@v3
+      - name: Build the stack
+      - run:  docker-compose --env-file ./config/.env.dev up -d
+      - run: echo "🧑🏻‍💻 This job's status is ${{ job.status }}."

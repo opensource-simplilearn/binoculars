@@ -13,7 +13,7 @@ jobs:
       - run: echo "💻 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of branch is ${{ github.ref }} and  repository is ${{ github.repository }}."
       - name: Check out repository
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
       - name: Build the stack
       - run:  docker-compose --env-file ./config/.env.dev up -d
       - run: echo "🧑🏻‍💻 This job's status is ${{ job.status }}."

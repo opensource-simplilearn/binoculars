@@ -30,6 +30,6 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: App screenshots
-          path: stack_test/__tests__/screenshots
+          path: stack_test/__tests__/screenshots/
       - name: Job Status
         run: echo "🧑🏻‍💻 job's status is ${{ job.status }}."

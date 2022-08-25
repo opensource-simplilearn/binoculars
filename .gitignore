@@ -1,2 +1,5 @@
 .vscode/
 .DS_Store
+stack_test/node_modules
+stack_test/testReport/
+stack_test/__tests__/screenshots/

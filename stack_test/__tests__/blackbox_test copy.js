@@ -52,7 +52,7 @@ describe(
         it('Prob Prometheus Io from https has been loaded', async () => {
             await page.waitForXPath('/html/body/p[1]/a');
             await page.screenshot({
-                path: '__tests__/screenshots/alertManagerlogin.png'
+                path: '__tests__/screenshots/blackbox.png'
             });
         })
     },

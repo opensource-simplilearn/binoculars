@@ -1,7 +1,7 @@
 name: binoculars-actions-workflow
 on: push
 jobs:
-  Docker-Build-Test:
+  Stack-Apps-Sanity-Test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -24,7 +24,7 @@ jobs:
       - name: Report artifact generation
         uses: actions/upload-artifact@v1
         with:
-          name: Report HTML
+          name: Test Report
           path: stack_test/testReport
       - name: Scrapper artifact generation
         uses: actions/upload-artifact@v1

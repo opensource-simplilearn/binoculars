@@ -3,6 +3,10 @@ on: push
 jobs:
   Docker-Build-Test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+
     steps:
       - uses: actions/checkout@v2
       - name: Build the stack
@@ -13,5 +17,14 @@ jobs:
         run: echo "💻 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - name: Branch Details
         run: echo "🔎 The name of branch is ${{ github.ref }} and  repository is ${{ github.repository }}."
+      - name: Install test framework dependencies
+        run: (cd stack_test && yarn install) 
+      - name: Start functional test cases 
+        run: (cd stack_test && yarn test)
+      - name: Report artifact generation
+        uses: actions/upload-artifact@v1
+        with:
+          name: Report HTML
+          path: stack_test/testReport
       - name: Job Status
         run: echo "🧑🏻‍💻 job's status is ${{ job.status }}."

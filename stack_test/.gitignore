@@ -1,0 +1,4 @@
+node_modules/
+yarn.lock
+testReport/
+__tests__/screenshots/

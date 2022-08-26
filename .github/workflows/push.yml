@@ -1,0 +1,34 @@
+name: binoculars-actions-workflow
+on: push
+jobs:
+  Stack-Apps-Sanity-Test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the stack
+        run:  docker-compose --env-file ./config/.env.dev up -d
+      - name: Trigger on event
+        run: echo "🕵🏻‍♀️ The job was automatically triggered by a ${{ github.event_name }} event."
+      - name: Trigger machine
+        run: echo "💻 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - name: Branch Details
+        run: echo "🔎 The name of branch is ${{ github.ref }} and  repository is ${{ github.repository }}."
+      - name: Install test framework dependencies
+        run: (cd stack_test && yarn install) 
+      - name: Start functional test cases 
+        run: (cd stack_test && yarn test)
+      - name: Report artifact generation
+        uses: actions/upload-artifact@v1
+        with:
+          name: Test Report
+          path: stack_test/testReport
+      - name: Scrapper artifact generation
+        uses: actions/upload-artifact@v1
+        with:
+          name: App screenshots
+          path: stack_test/__tests__/screenshots/
+      - name: Job Status
+        run: echo "🧑🏻‍💻 job's status is ${{ job.status }}."
